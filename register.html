@@ -1,0 +1,515 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Global Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Animated Background Elements */
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    @keyframes sway {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+    }
+
+    @keyframes rain {
+        0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes sunBeam {
+        0% { transform: scale(0) rotate(0deg); opacity: 0; }
+        50% { transform: scale(1.2) rotate(180deg); opacity: 0.6; }
+        100% { transform: scale(0) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes wind {
+        0% { transform: translateX(-100%); opacity: 0; }
+        10% { opacity: 0.4; }
+        90% { opacity: 0.4; }
+        100% { transform: translateX(100vw); opacity: 0; }
+    }
+
+    @keyframes cloudDrift {
+        0% { transform: translateX(-150px); }
+        100% { transform: translateX(calc(100vw + 150px)); }
+    }
+
+    @keyframes leafFall {
+        0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.1); opacity: 0.5; }
+    }
+
+    /* Animated Elements */
+    .animated-crop {
+        position: fixed;
+        bottom: 0;
+        font-size: 35px;
+        pointer-events: none;
+        z-index: 0;
+        animation: sway 4s ease-in-out infinite;
+    }
+
+    .raindrop {
+        position: fixed;
+        top: -20px;
+        color: #4fc3f7;
+        font-size: 20px;
+        pointer-events: none;
+        z-index: 0;
+        animation: rain linear infinite;
+    }
+
+    .sun-ray {
+        position: fixed;
+        top: 80px;
+        right: 80px;
+        color: #ffd54f;
+        font-size: 28px;
+        pointer-events: none;
+        z-index: 0;
+        animation: sunBeam 2.5s ease-out infinite;
+    }
+
+    .wind-line {
+        position: fixed;
+        top: 40%;
+        color: #b0bec5;
+        font-size: 22px;
+        pointer-events: none;
+        z-index: 0;
+        animation: wind 5s linear infinite;
+        white-space: nowrap;
+        letter-spacing: 5px;
+    }
+
+    .cloud {
+        position: fixed;
+        top: 30px;
+        font-size: 80px;
+        color: rgba(255, 255, 255, 0.85);
+        pointer-events: none;
+        z-index: 0;
+        animation: cloudDrift 40s linear infinite;
+        text-shadow: 3px 3px 15px rgba(0,0,0,0.1);
+    }
+
+    .falling-leaf {
+        position: fixed;
+        top: -30px;
+        font-size: 25px;
+        pointer-events: none;
+        z-index: 0;
+        animation: leafFall 6s linear infinite;
+    }
+
+    /* Main Container */
+    .register-container {
+        max-width: 500px;
+        margin: 50px auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+        animation: slideIn 0.6s ease-out;
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(5px);
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* Header with Animated Pattern */
+    .register-header {
+        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        color: white;
+        padding: 35px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .register-header::before {
+        content: '🌾🌽🌱🍃🌿';
+        position: absolute;
+        font-size: 120px;
+        opacity: 0.1;
+        animation: float 12s ease-in-out infinite;
+        top: -30px;
+        right: -40px;
+    }
+
+    .register-header::after {
+        content: '☀️🌧️💨🌤️';
+        position: absolute;
+        font-size: 100px;
+        opacity: 0.1;
+        animation: float 10s ease-in-out infinite reverse;
+        bottom: -30px;
+        left: -40px;
+    }
+
+    .register-header h2 {
+        font-size: 32px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    .register-header p {
+        font-size: 14px;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    /* Form Content */
+    .form-content {
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.98);
+    }
+
+    /* Form Groups with Staggered Animation */
+    .form-group {
+        margin-bottom: 30px;
+        animation: fadeInRight 0.6s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.2s; }
+    .form-group:nth-child(2) { animation-delay: 0.4s; }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Label Styles */
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #2e7d32;
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group label i {
+        margin-right: 8px;
+        font-size: 18px;
+    }
+
+    /* Input Fields with Glow Effects */
+    .form-group input {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: white;
+        font-family: inherit;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #4caf50;
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2), 0 0 20px rgba(76, 175, 80, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .form-group input:hover {
+        border-color: #4caf50;
+        transform: translateX(5px);
+    }
+
+    /* Button with Ripple and Pulse Effect */
+    .btn-register {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .btn-register::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-register:hover::before {
+        width: 400px;
+        height: 400px;
+    }
+
+    .btn-register:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(46, 125, 50, 0.4);
+    }
+
+    .btn-register:active {
+        transform: translateY(0);
+    }
+
+    /* Login Link */
+    .login-link {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 2px solid #e0e0e0;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .login-link p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .login-link a {
+        color: #2e7d32;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .login-link a:hover {
+        color: #1b5e20;
+        transform: translateX(5px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .register-container {
+            margin: 30px 20px;
+        }
+        
+        .form-content {
+            padding: 30px;
+        }
+        
+        .register-header h2 {
+            font-size: 26px;
+        }
+        
+        .cloud, .animated-crop, .raindrop, .sun-ray, .wind-line, .falling-leaf {
+            display: none;
+        }
+    }
+
+    /* Remove Number Input Spinner */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+<!-- JavaScript for Dynamic Animated Elements -->
+<script>
+    function createAnimatedElements() {
+        // Create animated crops
+        const crops = ['🌾', '🌽', '🌱', '🍃', '🌿', '🍂', '🌻', '🍀'];
+        for(let i = 0; i < 10; i++) {
+            const crop = document.createElement('div');
+            crop.className = 'animated-crop';
+            crop.textContent = crops[Math.floor(Math.random() * crops.length)];
+            crop.style.left = Math.random() * 100 + '%';
+            crop.style.bottom = Math.random() * 100 + '%';
+            crop.style.animationDelay = Math.random() * 5 + 's';
+            crop.style.animationDuration = 3 + Math.random() * 3 + 's';
+            crop.style.fontSize = 25 + Math.random() * 35 + 'px';
+            crop.style.opacity = 0.15 + Math.random() * 0.25;
+            document.body.appendChild(crop);
+        }
+        
+        // Create falling leaves
+        setInterval(() => {
+            if(Math.random() > 0.6) {
+                const leaf = document.createElement('div');
+                leaf.className = 'falling-leaf';
+                const leaves = ['🍃', '🍂', '🌿', '🍁'];
+                leaf.textContent = leaves[Math.floor(Math.random() * leaves.length)];
+                leaf.style.left = Math.random() * 100 + '%';
+                leaf.style.animationDuration = 4 + Math.random() * 3 + 's';
+                leaf.style.fontSize = 20 + Math.random() * 20 + 'px';
+                document.body.appendChild(leaf);
+                
+                setTimeout(() => {
+                    leaf.remove();
+                }, 7000);
+            }
+        }, 800);
+        
+        // Create raindrops occasionally
+        setInterval(() => {
+            if(Math.random() > 0.75) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                raindrop.textContent = '💧';
+                raindrop.style.left = Math.random() * 100 + '%';
+                raindrop.style.animationDuration = 1.2 + Math.random() * 1.5 + 's';
+                raindrop.style.fontSize = 18 + Math.random() * 12 + 'px';
+                document.body.appendChild(raindrop);
+                
+                setTimeout(() => {
+                    raindrop.remove();
+                }, 2500);
+            }
+        }, 600);
+        
+        // Create sun rays
+        setInterval(() => {
+            if(Math.random() > 0.85) {
+                const sunRay = document.createElement('div');
+                sunRay.className = 'sun-ray';
+                sunRay.textContent = '✨';
+                sunRay.style.top = Math.random() * 250 + 'px';
+                sunRay.style.right = Math.random() * 250 + 'px';
+                document.body.appendChild(sunRay);
+                
+                setTimeout(() => {
+                    sunRay.remove();
+                }, 2500);
+            }
+        }, 3500);
+        
+        // Create wind lines
+        setInterval(() => {
+            if(Math.random() > 0.9) {
+                const windLine = document.createElement('div');
+                windLine.className = 'wind-line';
+                windLine.textContent = ' 💨  💨';
+                windLine.style.top = Math.random() * 100 + '%';
+                windLine.style.animationDuration = 4 + Math.random() * 3 + 's';
+                document.body.appendChild(windLine);
+                
+                setTimeout(() => {
+                    windLine.remove();
+                }, 5000);
+            }
+        }, 4500);
+        
+        // Create clouds
+        const clouds = ['☁️', '🌤️', '☁️'];
+        for(let i = 0; i < 4; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            cloud.textContent = clouds[Math.floor(Math.random() * clouds.length)];
+            cloud.style.top = Math.random() * 250 + 'px';
+            cloud.style.animationDuration = 30 + Math.random() * 30 + 's';
+            cloud.style.animationDelay = i * 8 + 's';
+            document.body.appendChild(cloud);
+        }
+    }
+    
+    // Start animations when page loads
+    window.addEventListener('load', createAnimatedElements);
+</script>
+
+<div class="register-container">
+    <div class="register-header">
+        <h2>
+            🌱 Create Account
+        </h2>
+        <p>Join our agricultural community today!</p>
+    </div>
+    
+    <div class="form-content">
+        <form method="POST">
+            <div class="form-group">
+                <label>
+                    <i>👤</i> Username
+                </label>
+                <input type="text" name="username" placeholder="Enter your username" required autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <i>🔒</i> Password
+                </label>
+                <input type="password" name="password" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="btn-register">
+                🌾 Register Now
+            </button>
+        </form>
+        
+        <div class="login-link">
+            <p>Already have an account? <a href="/login">🔑 Login here</a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

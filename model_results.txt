@@ -1,0 +1,2 @@
+Classification: RandomForest | Accuracy: 0.6911544227886057
+Regression: XGBoost | R2: 0.30962084084134867

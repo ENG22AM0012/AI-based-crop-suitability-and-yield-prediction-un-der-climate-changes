@@ -1,0 +1,460 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* Enhanced CSS with modern styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Decorative animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-15px) rotate(5deg);
+    }
+}
+
+@keyframes sway {
+    0%, 100% {
+        transform: rotate(-2deg);
+    }
+    50% {
+        transform: rotate(2deg);
+    }
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Container */
+.users-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2), 0 10px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    animation: slideIn 0.6s ease-out;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(3px);
+    transition: transform 0.3s ease;
+}
+
+.users-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Header */
+.users-header {
+    background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 50%, #0a3d0a 100%);
+    color: white;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.users-header::before {
+    content: "🌾";
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.3;
+    animation: sway 6s ease-in-out infinite;
+}
+
+.users-header::after {
+    content: "🌽";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.3;
+    animation: sway 6s ease-in-out infinite reverse;
+}
+
+.users-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.users-header p {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+/* Content */
+.content-area {
+    padding: 45px;
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+}
+
+/* Stats Card */
+.stats-card {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 35px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(46, 125, 50, 0.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card::before {
+    content: "👥";
+    position: absolute;
+    font-size: 4rem;
+    opacity: 0.1;
+    right: 20px;
+    bottom: 20px;
+    animation: float 4s ease-in-out infinite;
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(46, 125, 50, 0.15);
+    border-color: rgba(46, 125, 50, 0.3);
+}
+
+.stats-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+.stats-label {
+    font-size: 1rem;
+    color: #2e7d32;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 20px;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: white;
+    padding: 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+th:first-child {
+    border-radius: 20px 0 0 0;
+}
+
+th:last-child {
+    border-radius: 0 20px 0 0;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #e8e8e8;
+    text-align: center;
+    color: #333;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+td:first-child {
+    font-weight: 700;
+    color: #2e7d32;
+}
+
+tr:hover td {
+    background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+    transform: scale(1.01);
+    cursor: pointer;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    color: #999;
+    font-style: italic;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+    opacity: 0.5;
+}
+
+/* Button */
+.btn-back {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 14px 35px;
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Animation elements */
+.animated-crop {
+    position: absolute;
+    font-size: 1.5rem;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+    z-index: 0;
+}
+
+.falling-leaf {
+    position: absolute;
+    font-size: 1.2rem;
+    pointer-events: none;
+    animation: fall 6s linear forwards;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+.raindrop {
+    position: absolute;
+    font-size: 1rem;
+    pointer-events: none;
+    animation: fall 2s linear forwards;
+    z-index: 0;
+    opacity: 0.4;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #1b5e20, #0a3d0a);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .users-container {
+        margin: 20px;
+    }
+    
+    .content-area {
+        padding: 25px;
+    }
+    
+    .users-header {
+        padding: 25px;
+    }
+    
+    .users-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .users-header::before,
+    .users-header::after {
+        font-size: 2rem;
+        opacity: 0.2;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+    }
+    
+    th, td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+}
+</style>
+
+<!-- FIXED SCRIPT - UNCHANGED -->
+<script>
+function createAnimatedElements() {
+
+    const container = document.querySelector('.users-container');
+
+    // crops
+    const crops = ['🌾','🌽','🌱','🍃','🌿'];
+    for(let i=0;i<8;i++){
+        const el = document.createElement('div');
+        el.className='animated-crop';
+        el.textContent = crops[Math.floor(Math.random()*crops.length)];
+        el.style.left=Math.random()*100+'%';
+        el.style.bottom=Math.random()*100+'%';
+        el.style.opacity=0.2;
+        container.appendChild(el);
+    }
+
+    // falling leaves
+    setInterval(()=>{
+        const leaf=document.createElement('div');
+        leaf.className='falling-leaf';
+        leaf.textContent='🍃';
+        leaf.style.left=Math.random()*100+'%';
+        container.appendChild(leaf);
+
+        setTimeout(()=>leaf.remove(),6000);
+    },1000);
+
+    // rain
+    setInterval(()=>{
+        if(Math.random()>0.7){
+            const rain=document.createElement('div');
+            rain.className='raindrop';
+            rain.textContent='💧';
+            rain.style.left=Math.random()*100+'%';
+            container.appendChild(rain);
+
+            setTimeout(()=>rain.remove(),2000);
+        }
+    },800);
+}
+
+// FIXED LOAD - UNCHANGED
+document.addEventListener('DOMContentLoaded', createAnimatedElements);
+</script>
+
+<div class="users-container">
+
+    <div class="users-header">
+        <h2>👥 Registered Users</h2>
+        <p>View all members of the farming community</p>
+    </div>
+
+    <div class="content-area">
+
+        <!-- STATS -->
+        <div class="stats-card">
+            <div class="stats-number">{{ users|length }}</div>
+            <div class="stats-label">Total Users</div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>#{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% if not users %}
+                    <tr>
+                        <td colspan="2" class="empty-state">
+                            <i>👥</i><br>
+                            No users found
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="text-align:center;">
+            <a href="/" class="btn-back">← Back to Home</a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

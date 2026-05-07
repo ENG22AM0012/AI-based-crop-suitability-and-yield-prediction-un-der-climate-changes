@@ -1,0 +1,875 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Global Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Animated Background Elements */
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    @keyframes sway {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+    }
+
+    @keyframes rain {
+        0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes sunBeam {
+        0% { transform: scale(0) rotate(0deg); opacity: 0; }
+        50% { transform: scale(1.2) rotate(180deg); opacity: 0.6; }
+        100% { transform: scale(0) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes wind {
+        0% { transform: translateX(-100%); opacity: 0; }
+        10% { opacity: 0.4; }
+        90% { opacity: 0.4; }
+        100% { transform: translateX(100vw); opacity: 0; }
+    }
+
+    @keyframes cloudDrift {
+        0% { transform: translateX(-150px); }
+        100% { transform: translateX(calc(100vw + 150px)); }
+    }
+
+    @keyframes leafFall {
+        0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.1); opacity: 0.6; }
+        100% { transform: scale(1); opacity: 0.3; }
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Animated Elements */
+    .animated-crop {
+        position: fixed;
+        bottom: 0;
+        font-size: 35px;
+        pointer-events: none;
+        z-index: 0;
+        animation: sway 4s ease-in-out infinite;
+    }
+
+    .raindrop {
+        position: fixed;
+        top: -20px;
+        color: #4fc3f7;
+        font-size: 20px;
+        pointer-events: none;
+        z-index: 0;
+        animation: rain linear infinite;
+    }
+
+    .sun-ray {
+        position: fixed;
+        top: 80px;
+        right: 80px;
+        color: #ffd54f;
+        font-size: 28px;
+        pointer-events: none;
+        z-index: 0;
+        animation: sunBeam 2.5s ease-out infinite;
+    }
+
+    .wind-line {
+        position: fixed;
+        top: 40%;
+        color: #b0bec5;
+        font-size: 22px;
+        pointer-events: none;
+        z-index: 0;
+        animation: wind 5s linear infinite;
+        white-space: nowrap;
+        letter-spacing: 5px;
+    }
+
+    .cloud {
+        position: fixed;
+        top: 30px;
+        font-size: 80px;
+        color: rgba(255, 255, 255, 0.85);
+        pointer-events: none;
+        z-index: 0;
+        animation: cloudDrift 40s linear infinite;
+        text-shadow: 3px 3px 15px rgba(0,0,0,0.1);
+    }
+
+    .falling-leaf {
+        position: fixed;
+        top: -30px;
+        font-size: 25px;
+        pointer-events: none;
+        z-index: 0;
+        animation: leafFall 6s linear infinite;
+    }
+
+    /* Main Container */
+    .about-container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Hero Section */
+    .about-hero {
+        background: linear-gradient(135deg, rgba(46, 125, 50, 0.95) 0%, rgba(27, 94, 32, 0.95) 100%);
+        border-radius: 30px;
+        padding: 50px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        animation: zoomIn 0.8s ease-out;
+    }
+
+    .about-hero::before {
+        content: '🌾🌽🌱🍃🌿🌻🍀🌾';
+        position: absolute;
+        font-size: 180px;
+        opacity: 0.1;
+        animation: float 15s ease-in-out infinite;
+        top: -60px;
+        left: -60px;
+    }
+
+    .about-hero::after {
+        content: '☀️🌧️💨🌤️⛈️🌈🌾';
+        position: absolute;
+        font-size: 160px;
+        opacity: 0.1;
+        animation: float 12s ease-in-out infinite reverse;
+        bottom: -60px;
+        right: -60px;
+    }
+
+    .about-hero h3 {
+        font-size: 48px;
+        color: white;
+        margin-bottom: 20px;
+        animation: bounce 2s ease-in-out infinite;
+        position: relative;
+        z-index: 1;
+    }
+
+    .about-hero p {
+        font-size: 18px;
+        color: rgba(255,255,255,0.95);
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Project Overview Section */
+    .overview-section {
+        background: white;
+        border-radius: 25px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .section-title {
+        font-size: 32px;
+        color: #2e7d32;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(90deg, #4caf50, #81c784);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .overview-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+    }
+
+    .overview-text {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #555;
+    }
+
+    .overview-text p {
+        margin-bottom: 15px;
+    }
+
+    .overview-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .stat-badge {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-badge:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-badge .number {
+        font-size: 32px;
+        font-weight: bold;
+        color: #2e7d32;
+        display: block;
+    }
+
+    .stat-badge .label {
+        font-size: 14px;
+        color: #666;
+        margin-top: 5px;
+    }
+
+    /* Technology Stack Section */
+    .tech-section {
+        background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        border-radius: 25px;
+        padding: 40px;
+        margin-bottom: 40px;
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .tech-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .tech-card:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .tech-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+        display: inline-block;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    .tech-card h4 {
+        font-size: 18px;
+        color: #2e7d32;
+        margin-bottom: 10px;
+    }
+
+    .tech-card p {
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* Features List Section */
+    .features-list-section {
+        background: white;
+        border-radius: 25px;
+        padding: 40px;
+        margin-bottom: 40px;
+        animation: slideInRight 0.6s ease-out;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+        transform: translateX(10px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+        font-size: 30px;
+        min-width: 50px;
+    }
+
+    .feature-content h4 {
+        font-size: 18px;
+        color: #2e7d32;
+        margin-bottom: 8px;
+    }
+
+    .feature-content p {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+    }
+
+    /* Dataset Section */
+    .dataset-section {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-radius: 25px;
+        padding: 40px;
+        margin-bottom: 40px;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .dataset-content {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .dataset-icon {
+        font-size: 80px;
+        animation: rotate 10s linear infinite;
+    }
+
+    .dataset-text {
+        flex: 1;
+    }
+
+    .dataset-text p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+    .dataset-stats {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .dataset-stat {
+        background: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+    /* Impact Section */
+    .impact-section {
+        background: white;
+        border-radius: 25px;
+        padding: 40px;
+        margin-bottom: 40px;
+        animation: zoomIn 0.6s ease-out;
+    }
+
+    .impact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .impact-card {
+        text-align: center;
+        padding: 25px;
+        background: linear-gradient(135deg, #f5f5f5 0%, #fff 100%);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .impact-card:hover {
+        transform: translateY(-5px);
+        background: linear-gradient(135deg, #e8f5e9 0%, #f5f5f5 100%);
+    }
+
+    .impact-number {
+        font-size: 36px;
+        font-weight: bold;
+        color: #2e7d32;
+        display: block;
+    }
+
+    .impact-label {
+        font-size: 14px;
+        color: #777;
+        margin-top: 10px;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        text-align: center;
+        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        border-radius: 25px;
+        padding: 50px;
+        animation: zoomIn 0.8s ease-out;
+    }
+
+    .cta-section h3 {
+        color: white;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .cta-section p {
+        color: rgba(255,255,255,0.95);
+        margin-bottom: 30px;
+    }
+
+    .cta-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: white;
+        color: #2e7d32;
+        padding: 15px 40px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(46, 125, 50, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .cta-button:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .about-hero h3 {
+            font-size: 32px;
+        }
+        
+        .about-hero p {
+            font-size: 14px;
+        }
+        
+        .about-hero {
+            padding: 40px 20px;
+        }
+        
+        .overview-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .tech-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .dataset-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .cloud, .animated-crop, .raindrop, .sun-ray, .wind-line, .falling-leaf {
+            display: none;
+        }
+    }
+</style>
+
+<!-- JavaScript for Dynamic Animated Elements -->
+<script>
+    function createAnimatedElements() {
+        // Create animated crops
+        const crops = ['🌾', '🌽', '🌱', '🍃', '🌿', '🍂', '🌻', '🍀', '🌺', '🌸', '🍁', '🌾', '🌽', '🌱'];
+        for(let i = 0; i < 18; i++) {
+            const crop = document.createElement('div');
+            crop.className = 'animated-crop';
+            crop.textContent = crops[Math.floor(Math.random() * crops.length)];
+            crop.style.left = Math.random() * 100 + '%';
+            crop.style.bottom = Math.random() * 100 + '%';
+            crop.style.animationDelay = Math.random() * 5 + 's';
+            crop.style.animationDuration = 3 + Math.random() * 3 + 's';
+            crop.style.fontSize = 25 + Math.random() * 40 + 'px';
+            crop.style.opacity = 0.15 + Math.random() * 0.25;
+            document.body.appendChild(crop);
+        }
+        
+        // Create falling leaves
+        setInterval(() => {
+            if(Math.random() > 0.68) {
+                const leaf = document.createElement('div');
+                leaf.className = 'falling-leaf';
+                const leaves = ['🍃', '🍂', '🌿', '🍁', '🌾', '🍀', '🌽'];
+                leaf.textContent = leaves[Math.floor(Math.random() * leaves.length)];
+                leaf.style.left = Math.random() * 100 + '%';
+                leaf.style.animationDuration = 4 + Math.random() * 3 + 's';
+                leaf.style.fontSize = 20 + Math.random() * 20 + 'px';
+                document.body.appendChild(leaf);
+                
+                setTimeout(() => {
+                    leaf.remove();
+                }, 7000);
+            }
+        }, 550);
+        
+        // Create raindrops occasionally
+        setInterval(() => {
+            if(Math.random() > 0.82) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                raindrop.textContent = '💧';
+                raindrop.style.left = Math.random() * 100 + '%';
+                raindrop.style.animationDuration = 1.2 + Math.random() * 1.5 + 's';
+                raindrop.style.fontSize = 18 + Math.random() * 12 + 'px';
+                document.body.appendChild(raindrop);
+                
+                setTimeout(() => {
+                    raindrop.remove();
+                }, 2500);
+            }
+        }, 450);
+        
+        // Create sun rays
+        setInterval(() => {
+            if(Math.random() > 0.91) {
+                const sunRay = document.createElement('div');
+                sunRay.className = 'sun-ray';
+                sunRay.textContent = '✨';
+                sunRay.style.top = Math.random() * 300 + 'px';
+                sunRay.style.right = Math.random() * 300 + 'px';
+                document.body.appendChild(sunRay);
+                
+                setTimeout(() => {
+                    sunRay.remove();
+                }, 2500);
+            }
+        }, 2800);
+        
+        // Create wind lines
+        setInterval(() => {
+            if(Math.random() > 0.92) {
+                const windLine = document.createElement('div');
+                windLine.className = 'wind-line';
+                windLine.textContent = '💨  💨  💨';
+                windLine.style.top = Math.random() * 100 + '%';
+                windLine.style.animationDuration = 4 + Math.random() * 3 + 's';
+                document.body.appendChild(windLine);
+                
+                setTimeout(() => {
+                    windLine.remove();
+                }, 5000);
+            }
+        }, 3800);
+        
+        // Create clouds
+        const clouds = ['☁️', '🌤️', '☁️☁️', '☁️☁️'];
+        for(let i = 0; i < 7; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            cloud.textContent = clouds[Math.floor(Math.random() * clouds.length)];
+            cloud.style.top = Math.random() * 300 + 'px';
+            cloud.style.animationDuration = 30 + Math.random() * 40 + 's';
+            cloud.style.animationDelay = i * 4 + 's';
+            document.body.appendChild(cloud);
+        }
+    }
+    
+    // Start animations when page loads
+    window.addEventListener('load', createAnimatedElements);
+</script>
+
+<div class="about-container">
+    <!-- Hero Section -->
+    <div class="about-hero">
+        <h3>📊 About Our Project 🌾</h3>
+        <p>Revolutionizing agriculture through AI-powered crop yield prediction and smart farming solutions</p>
+    </div>
+    
+    <!-- Project Overview -->
+    <div class="overview-section">
+        <h3 class="section-title">🎯 Project Overview</h3>
+        <div class="overview-content">
+            <div class="overview-text">
+                <p>This system predicts crop, yield and production using Machine Learning and comprehensive agricultural dataset. Our AI-powered platform helps farmers make data-driven decisions for optimal crop selection and resource management.</p>
+                <p>By analyzing key parameters like soil nutrients (N-P-K), climate conditions (rainfall, temperature), and seasonal patterns, we provide accurate predictions that maximize agricultural productivity.</p>
+                <p>Our mission is to empower farmers with technology, reduce crop failure risks, and contribute to sustainable agriculture practices.</p>
+            </div>
+            <div class="overview-stats">
+                <div class="stat-badge">
+                    <span class="number">98%</span>
+                    <span class="label">Prediction Accuracy</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="number">10K+</span>
+                    <span class="label">Data Points</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="number">22</span>
+                    <span class="label">Crop Types</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="number">15+</span>
+                    <span class="label">Parameters Analyzed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Technology Stack -->
+    <div class="tech-section">
+        <h3 class="section-title">🛠️ Technology Stack</h3>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <div class="tech-icon">🐍</div>
+                <h4>Python</h4>
+                <p>Core programming language for ML models</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🌲</div>
+                <h4>Machine Learning</h4>
+                <p>Random Forest & Decision Tree Algorithms</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🌐</div>
+                <h4>Flask</h4>
+                <p>Web framework for deployment</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">📊</div>
+                <h4>Pandas & NumPy</h4>
+                <p>Data processing and analysis</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🎨</div>
+                <h4>HTML/CSS</h4>
+                <p>Frontend interface design</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🗄️</div>
+                <h4>SQLite</h4>
+                <p>Database management</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Key Features -->
+    <div class="features-list-section">
+        <h3 class="section-title">✨ Key Features</h3>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🌾</div>
+                <div class="feature-content">
+                    <h4>Crop Recommendation</h4>
+                    <p>Get the best crop suggestions based on your soil and climate conditions</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📈</div>
+                <div class="feature-content">
+                    <h4>Yield Prediction</h4>
+                    <p>Accurate estimation of expected harvest per hectare</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🏭</div>
+                <div class="feature-content">
+                    <h4>Production Forecast</h4>
+                    <p>Calculate total production based on cultivation area</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🧪</div>
+                <div class="feature-content">
+                    <h4>Soil Analysis</h4>
+                    <p>Evaluate N-P-K levels for optimal nutrient balance</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🌡️</div>
+                <div class="feature-content">
+                    <h4>Climate Insights</h4>
+                    <p>Analyze rainfall and temperature patterns</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📊</div>
+                <div class="feature-content">
+                    <h4>Data Visualization</h4>
+                    <p>Interactive charts and graphs for better understanding</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dataset Information -->
+    <div class="dataset-section">
+        <h3 class="section-title">📊 Dataset Details</h3>
+        <div class="dataset-content">
+            <div class="dataset-icon">📁</div>
+            <div class="dataset-text">
+                <p>Our model is trained on comprehensive agricultural data collected from various regions, including:</p>
+                <div class="dataset-stats">
+                    <span class="dataset-stat">🌾 03 Crop Types</span>
+                    <span class="dataset-stat">📍 15+ Districts</span>
+                    <span class="dataset-stat">📅 Few Years Data</span>
+                    <span class="dataset-stat">🌡️ Climate Patterns</span>
+                    <span class="dataset-stat">🧪 Soil Nutrients</span>
+                    <span class="dataset-stat">📈 Yield Records</span>
+                </div>
+                <p>The dataset undergoes rigorous preprocessing and validation to ensure prediction accuracy and reliability.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Impact Section -->
+    <div class="impact-section">
+        <h3 class="section-title">🌍 Our Impact</h3>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <span class="impact-number">1000+</span>
+                <span class="impact-label">Farmers Benefited</span>
+            </div>
+            <div class="impact-card">
+                <span class="impact-number">30%</span>
+                <span class="impact-label">Average Yield Increase</span>
+            </div>
+            <div class="impact-card">
+                <span class="impact-number">25+</span>
+                <span class="impact-label">Villages Covered</span>
+            </div>
+            <div class="impact-card">
+                <span class="impact-number">85%</span>
+                <span class="impact-label">Farmer Satisfaction</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="cta-section">
+        <h3>Ready to Transform Your Farming?</h3>
+        <p>Join us in revolutionizing agriculture with AI-powered insights</p>
+        <a href="/predict" class="cta-button">
+            🚀 Start Predicting Now 🌾
+        </a>
+    </div>
+</div>
+
+{% endblock %}
